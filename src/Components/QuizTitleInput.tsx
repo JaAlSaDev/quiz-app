@@ -15,7 +15,7 @@ const QuizTitleInput = (props: Props) =>
     [
         {
             checkValidity: (value: string) => value.length > 2,
-            errorMessage: "The quiz title must be longer than 2 characters"
+            errorMessage: "The quiz title must be at least 3 characters."
         },
         {
             checkValidity: (value: string) => value.length < 151,

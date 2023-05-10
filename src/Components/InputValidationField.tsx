@@ -14,8 +14,6 @@ type Props =
     onChange: (e: {value: string, isValid: boolean}) => void
 }
 
-
-
 const InputValidationField = (props: Props) => 
 {
     const [value, setValue] = useState<string>("");
@@ -63,8 +61,6 @@ const InputValidationField = (props: Props) =>
         const { isValid, errorMessage } = validateInput();
 
         setErrorMessage(errorMessage);
-
-        console.log("{ value: value, isValid: isValid }: ", { value: value, isValid: isValid });
         
         setCompositionValue({ value: value, isValid: isValid })
       
@@ -72,11 +68,7 @@ const InputValidationField = (props: Props) =>
 
 
     useEffect(() => props.onChange(compositionValue), [compositionValue])
-    
-
-
-    console.log("compositionValue: ", compositionValue);
-    
+        
     return (
         <InputField 
             style={props?.style}

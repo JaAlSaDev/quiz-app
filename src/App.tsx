@@ -1,8 +1,7 @@
 import { useState } from "react"
 
 import MainPage from "./Pages/MainPage"
-import CreateQuizPage from "./Pages/CreateQuiz"
-import Button from "./Components/Button"
+import CreateQuizPage from "./Pages/CreateQuiz/CreateQuiz"
 
 import "./App.css"
 
@@ -34,7 +33,7 @@ const App = () =>
 
   return (
     <div className="h-screen w-screen flex flex-col items-center">
-        <p className="h-fit my-3 text-7xl">Ultimate Quiz Creator</p>
+        <p className="h-fit my-3 text-7xl text-center">Ultimate Quiz Creator</p>
 
         {PagesObject[currentPage]}
     </div>

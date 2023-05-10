@@ -20,13 +20,13 @@ const MainPage = (props: Props) =>
 
             <div className="flex h-fit mt-4 gap-3">
                 <Button 
-                    className="py-3 px-4 bg-[#ee9a00] rounded-lg"
+                    className="py-3 px-4 rounded-lg"
                     text={"Create a new quiz!"}
                     onClick={navigateToCreatePage}
                 />
 
                 <Button 
-                    className="py-3 px-4 bg-[#ee9a00] rounded-lg"
+                    className="py-3 px-4 rounded-lg"
                     text={"View existing quizes"}
                     onClick={navigateToViewPage}
                 />
