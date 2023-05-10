@@ -1,24 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react"
 
-function App() {
+import MainPage from "./Pages/MainPage"
+import CreateQuizPage from "./Pages/CreateQuiz/CreateQuiz"
+
+import "./App.css"
+
+enum Pages 
+{  
+    MAIN_PAGE, 
+    CREATE_PAGE, 
+    VIEW_PAGE 
+};
+
+const App = () => 
+{
+    const [currentPage, setCurrentPage] = useState<Pages>(Pages.MAIN_PAGE)
+
+    const navigateToCreatePage = () => setCurrentPage(Pages.CREATE_PAGE);
+
+    const navigateToViewPage = () => setCurrentPage(Pages.VIEW_PAGE);
+
+    const PagesObject =
+    {
+        [Pages.MAIN_PAGE]: 
+          <MainPage 
+            navigateToCreatePage={navigateToCreatePage} 
+            navigateToViewPage={navigateToViewPage}
+          />,
+        [Pages.CREATE_PAGE]: <CreateQuizPage />,
+        [Pages.VIEW_PAGE]: <></>
+    }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="h-screen w-screen flex flex-col items-center">
+        <p className="h-fit my-3 text-7xl text-center">Ultimate Quiz Creator</p>
+
+        {PagesObject[currentPage]}
     </div>
   );
 }
