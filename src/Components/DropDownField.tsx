@@ -28,7 +28,7 @@ const DropDownField = (props: Props) =>
 
   return (
     <div className={`flex flex-col  ${style?.container}`}>
-        <label className={` ${style?.label}`}>{label}</label>
+        <label className={`${style?.label}`}>{label}</label>
 
         <select 
             className={`w-fit pe-4 ${style?.input}`}
@@ -36,7 +36,7 @@ const DropDownField = (props: Props) =>
             value={value} 
             onChange={e => onChange(e.target.value)}
         >
-            {options.map(option => <option value={option}>{option}</option>)}
+            {options.map(option => <option key={option} value={option}>{option}</option>)}
         </select>
     </div>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputFieldStyle, ValidationRule } from '../Types/types'
+import { InputFieldStyle, ValidationRule } from '../Types/inputTypes'
 import InputValidationField from './InputValidationField'
 
 type Props = 

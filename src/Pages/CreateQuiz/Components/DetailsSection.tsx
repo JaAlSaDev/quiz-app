@@ -3,7 +3,7 @@ import React from 'react'
 import QuizTitleInput from '../../../Components/QuizTitleInput'
 import NumberInputField from '../../../Components/NumberInputField'
 
-import { CompositionValue } from '../../../Types/types'
+import { CompositionValue } from '../../../Types/questionTypes'
 type Props = 
 {
     editQuizDetails: (key: string, value: CompositionValue) => void

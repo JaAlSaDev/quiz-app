@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputFieldStyle, ValidationRule } from '../../../Types/types'
+import { InputFieldStyle, ValidationRule } from '../../../Types/inputTypes'
 import InputValidationField from '../../../Components/InputValidationField'
 
 type Props = 
@@ -7,7 +7,6 @@ type Props =
     style?: InputFieldStyle
     onChange: (e: {value: string, isValid: boolean}) => void
 }
-
 
 const QuestionTitleInput = (props: Props) => 
 {

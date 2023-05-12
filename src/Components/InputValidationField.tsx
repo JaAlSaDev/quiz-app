@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { InputFieldStyle, ValidationRule } from '../Types/types';
+import { InputFieldStyle, ValidationRule } from '../Types/inputTypes';
 import InputField from './InputField';
 
-import { CompositionValue } from '../Types/types';
+import { CompositionValue } from '../Types/questionTypes';
 type Props = 
 {
     style?: InputFieldStyle
@@ -53,21 +53,20 @@ const InputValidationField = (props: Props) =>
     {
         const hasInteractedWithInputField = hasFocused && hasTyped;
         
-        if (!hasInteractedWithInputField) 
+        if (hasInteractedWithInputField) 
         {
-            return
-        }
+            const { isValid, errorMessage } = validateInput();
 
-        const { isValid, errorMessage } = validateInput();
-
-        setErrorMessage(errorMessage);
+            setErrorMessage(errorMessage);
         
-        setCompositionValue({ value: value, isValid: isValid })
-      
+            setCompositionValue({ value: value, isValid: isValid })
+        }
     }, [value, hasFocused])
 
 
-    useEffect(() => props.onChange(compositionValue), [compositionValue])
+    useEffect(() => {
+        props.onChange(compositionValue)
+    }, [compositionValue])
         
     return (
         <InputField 
