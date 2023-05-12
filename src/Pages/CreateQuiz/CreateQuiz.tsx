@@ -3,6 +3,7 @@ import Button from '../../Components/Button'
 import MainPage from '../MainPage'
 import DetailsSection from './Components/DetailsSection'
 import { CompositionValue } from '../../Types/types'
+import QuestionsSection from './Components/QuestionsSection'
 
 type Props = {}
 
@@ -69,10 +70,10 @@ const CreateQuizPage = (props: Props) =>
     
 
     return (
-        <div className='w-[75%]'>
-            <DetailsSection 
-                editQuizDetails={editQuizDetails}
-            />
+        <div className='w-[75%] flex flex-col gap-3'>
+            <DetailsSection editQuizDetails={editQuizDetails} />
+
+            <QuestionsSection />
         </div>
     )
 }

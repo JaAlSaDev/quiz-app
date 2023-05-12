@@ -63,7 +63,7 @@ const InputField = (props: Props) =>
                 <>
                     <div className={`w-full ${props?.errorMessage? "bg-red-500": "bg-gray-500"} ${style?.underline}`}/>
 
-                    <div className='mt-2 h-4 mb-4'>
+                    <div className='mt-2 h-4 mb-1'>
                         {props.errorMessage && <p className='text-sm text-red-500'>{props.errorMessage}</p>}
                     </div>
                 </>
