@@ -2,7 +2,7 @@ import React from 'react'
 
 import Button from '../Button'
 
-import { Answer, AnswerType, CompositionValue, MULTI_CHOICE, QuestionTypeLabel, YES_NO } from '../../Types/questionTypes'
+import { Answer, GenericAnswer, BooleanAnswer, CompositionValue, MultiChoiceAnswer, QuestionTypeLabel } from '../../Types/questionTypes'
 import MultiChoiceInput from './MultiChoiceInput'
 
 interface RadioProps
@@ -54,7 +54,7 @@ const RadioInput = (props: RadioProps) =>
         <div className={`flex bg-blue items-center select-none ${style?.container}`}>
             <div 
                 className={`h-3 flex items-center justify-center cursor-pointer rounded-full aspect-square border ${props?.isDisabled? "border-gray-900": "border-black"}  overflow-hidden`}
-                onClick={() => changeValue(possibleAnswer?.id as number)} 
+                onClick={() => changeValue(possibleAnswer.id)} 
             >
                 <div className={`h-[70%] rounded-full aspect-square ${isChosen? props?.isDisabled? "bg-gray-900": "bg-black": ""}`}/>
             </div>
@@ -102,7 +102,7 @@ interface RadioInputsProps
 
     isDisabled?: boolean,
 
-    answer: YES_NO | MULTI_CHOICE,
+    answer: GenericAnswer,
 
     onChange?: (correctAnswer: number) => void
 
@@ -140,8 +140,9 @@ const RadioInputs = (props: RadioInputsProps) =>
         }
     }
     
+    const isMultiChoice = answer.label === QuestionTypeLabel.multi_choice
   return (
-    <div className={`${style?.container} ${answer.label === QuestionTypeLabel["multi-choice"] && "flex flex-col"}`}>
+    <div className={`${style?.container} ${isMultiChoice && "flex flex-col"}`}>
         {
             answer?.answers?.map((possibleAnswer, index) =>
             {
@@ -150,7 +151,7 @@ const RadioInputs = (props: RadioInputsProps) =>
                         key={possibleAnswer?.id} 
                         style={style?.radio}
 
-                        isMultiChoice={answer.label === QuestionTypeLabel["multi-choice"]}
+                        isMultiChoice={isMultiChoice}
                         questionType={answer.label}
                         isDisabled={props?.isDisabled}
 

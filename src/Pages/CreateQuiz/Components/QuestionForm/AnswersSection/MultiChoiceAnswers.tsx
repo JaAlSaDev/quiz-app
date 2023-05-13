@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 
-import { Answer, MULTI_CHOICE, QuestionTypeLabel, YES_NO } from '../../../Types/questionTypes';
+import { Answer, BooleanAnswer, GenericAnswer, MultiChoiceAnswer, QuestionTypeLabel } from '../../../../../Types/questionTypes';
 
-import Button from '../../../Components/Button';
+import Button from '../../../../../Components/Button';
 
-import RadioInputs from '../../../Components/InputFields/RadioInputs';
+import RadioInputs from '../../../../../Components/InputFields/RadioInputs';
 
 type Props = 
 {
@@ -14,7 +14,7 @@ type Props =
         radio?: { container?: string, input?: string }
     },
 
-    answer: YES_NO | MULTI_CHOICE,
+    answer: GenericAnswer,
 
     onChange: (correctAnswer: number) => void,
 
@@ -28,7 +28,7 @@ type Props =
 
 const Header = (props: 
         {
-            answer: YES_NO | MULTI_CHOICE, 
+            answer: GenericAnswer, 
             questionType: QuestionTypeLabel,
             addAnswer?: () => void
 }) =>
@@ -39,22 +39,17 @@ const Header = (props:
 
     const { answer, questionType } = props;
 
-    useEffect(() => {
+    useEffect(() => 
+    {
+        const isAnswerMultiChoice = answer.label === QuestionTypeLabel.multi_choice;
 
-      if (typeof (answer as MULTI_CHOICE)?.canAddNewOption === "function") 
-      {
-        setCanAddNewOption((answer as MULTI_CHOICE).canAddNewOption())
-      }
-
-      if (typeof (answer as MULTI_CHOICE)?.doesMeetMinimum === "function") 
-      {
-        setMeetsMinimum((answer as MULTI_CHOICE).doesMeetMinimum())
-      }
-    }, [answer, answer.answers])
+        if (isAnswerMultiChoice) 
+        {
+            setCanAddNewOption((answer as MultiChoiceAnswer)?.canAddNewOption())
+            setMeetsMinimum((answer as MultiChoiceAnswer)?.doesMeetMinimum())
+        }
+    }, [answer])
     
-
-    
-
     const addAnswer = () =>
     {
         if (props?.addAnswer) 
@@ -62,14 +57,14 @@ const Header = (props:
             props.addAnswer()
         }
     }
-
+    
     return (
         <div>
             <div className={`flex justify-between items-center`}>
                 <p className='text-lg font-bold'>Possible Answers: </p>
 
                 {
-                    questionType === QuestionTypeLabel["multi-choice"]
+                    answer.label === QuestionTypeLabel.multi_choice
                 &&
                     <Button 
                         className="w-fit px-3 py-1 text-lg rounded-lg"
@@ -80,19 +75,20 @@ const Header = (props:
                 }
             </div>
 
-            {!doesMeetMinimum && <p>You must add at least 2 answers..</p>}
+            {!doesMeetMinimum && answer.label === QuestionTypeLabel.multi_choice && <p>You must add at least 2 answers..</p>}
         </div>
     )
     
 }
-const AnswerSection = (props: Props) => 
+
+const MultiChoiceAnswers = (props: Props) => 
 {
     const { style, answer, onChange } = props;
 
     const questionType = answer.label;
-    
+        
     return (
-        <div className={`${questionType === QuestionTypeLabel["yes-no"] && "flex"}  gap-3`}>
+        <div className={`${answer.label === QuestionTypeLabel.yes_no && "flex"}  gap-3`}>
             <Header 
                 answer={answer}
                 questionType={questionType}
@@ -112,4 +108,4 @@ const AnswerSection = (props: Props) =>
     )
 }
 
-export default AnswerSection
+export default MultiChoiceAnswers

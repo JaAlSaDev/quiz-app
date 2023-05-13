@@ -7,12 +7,12 @@ export type CompositionValue = { value: string, isValid: boolean }
 
 export enum QuestionTypeLabel
 {
-    "yes-no" = "yes-no",
-    "multi-choice" = "multi choice", 
-    "open-ended" ="open ended"
+    "yes_no" = "yes-no",
+    "multi_choice" = "multi choice", 
+    "open_ended" ="open ended"
 }
 
-export type Answer = null | { id: number, composition: CompositionValue } 
+export type Answer =  { id: number, composition: CompositionValue } 
 
 const yes : Answer = 
 {
@@ -26,27 +26,31 @@ const no : Answer =
     composition: { value: "no", isValid: true }
 }
 
+const booleanAnswers =  { "yes": yes, "no": no }
+
 export type multi_choice_option = Answer
 
-export class YES_NO 
+
+export class BooleanAnswer 
 {
-    readonly label: QuestionTypeLabel = QuestionTypeLabel["yes-no"];
-    correctAnswerID: number | null = no?.id as number;
-    readonly answers: Answer[] = [yes, no]
+    label: QuestionTypeLabel = QuestionTypeLabel.yes_no;
+    correctAnswerID: number = booleanAnswers["no"].id;
+    answers: Answer[] = [yes, no];
 }
 
-export class MULTI_CHOICE
-{
-    readonly label: QuestionTypeLabel = QuestionTypeLabel["multi-choice"];
-    readonly answersSize: { min: number, max: number } = { min: 2, max: 4 }
 
-    correctAnswerID: number | null = null;
+export class MultiChoiceAnswer 
+{
+    private static readonly ANSWER_SIZE: { min: number, max: number } = { min: 2, max: 4 };
+
+    label: QuestionTypeLabel = QuestionTypeLabel.multi_choice;
+    correctAnswerID: number = -1;
     answers: Answer[] = [];
 
     doesMeetMinimum = (): boolean =>
     {
         const answers = this.answers;
-        const { min } = this.answersSize
+        const { min } = MultiChoiceAnswer.ANSWER_SIZE
 
         return min <= answers.length
     };
@@ -54,34 +58,76 @@ export class MULTI_CHOICE
     canAddNewOption = (): boolean =>
     {
         const answers = this.answers;
-        const { max } = this.answersSize
+        const { max } = MultiChoiceAnswer.ANSWER_SIZE
         
         return answers.length < max
     };
 }
 
-export class OPEN_ENDED 
-{ 
-    readonly label: QuestionTypeLabel = QuestionTypeLabel["open-ended"];
-    answers: Answer = null;
-} 
 
-export type AnswerType = YES_NO | MULTI_CHOICE | OPEN_ENDED
+export class OpenEndedAnswer
+{
+    label: QuestionTypeLabel = QuestionTypeLabel.open_ended;
+    correctAnswerID: number = -1;
+    readonly answers: Answer[] = [];
+}
+
+// export class YES_NO 
+// {
+//     readonly label: QuestionTypeLabel = QuestionTypeLabel["yes-no"];
+//     correctAnswerID: number = booleanAnswers.no?.id;
+//     readonly answers: Answer[] = [yes, no]
+// }
+
+// export class MULTI_CHOICE
+// {
+//     readonly label: QuestionTypeLabel = QuestionTypeLabel["multi-choice"];
+//     readonly answersSize: { min: number, max: number } = { min: 2, max: 4 }
+
+//     correctAnswerID: number | null = null;
+//     answers: Answer[] = [];
+
+//     doesMeetMinimum = (): boolean =>
+//     {
+//         const answers = this.answers;
+//         const { min } = this.answersSize
+
+//         return min <= answers.length
+//     };
+
+//     canAddNewOption = (): boolean =>
+//     {
+//         const answers = this.answers;
+//         const { max } = this.answersSize
+        
+//         return answers.length < max
+//     };
+// }
+
+// export class OPEN_ENDED 
+// { 
+//     readonly label: QuestionTypeLabel = QuestionTypeLabel["open-ended"];
+//     readonly answers: Answer[] = [];
+// } 
+
+export type GenericAnswer = BooleanAnswer | MultiChoiceAnswer | OpenEndedAnswer;
 
 export type Question =
 {
+    id: number;
     isValid: boolean
 
     title: CompositionValue,
     clarification?: CompositionValue,
-    answer?: AnswerType,   
+
+    answer?: GenericAnswer,   
 }
 
 export const typesArray = Object.values(QuestionTypeLabel);
 
-export const questionTypesObj: { [label in QuestionTypeLabel]: AnswerType } =
+export const questionTypesObj: { [label in QuestionTypeLabel]: GenericAnswer } =
 {
-    "yes-no": new YES_NO(),
-    "multi choice": new MULTI_CHOICE(),
-    "open ended": new OPEN_ENDED()
+    "yes-no": new BooleanAnswer(),
+    "multi choice": new MultiChoiceAnswer(),
+    "open ended": new OpenEndedAnswer()
 }

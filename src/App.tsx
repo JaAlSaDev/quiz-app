@@ -30,7 +30,7 @@ const App = () =>
             navigateToCreatePage={navigateToCreatePage} 
             navigateToViewPage={navigateToViewPage}
           />,
-          
+
         [Pages.CREATE_PAGE]: 
           <CreateQuizPage navigateToMainPage={navigateToMainPage} />,
 

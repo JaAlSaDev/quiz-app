@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import Button from '../../../Components/Button';
 
-import QuestionForm from './QuestionForm';
+import QuestionForm from './QuestionForm/QuestionForm';
 import { Question } from '../../../Types/questionTypes';
 import Questions from './Questions';
 

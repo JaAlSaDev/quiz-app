@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 
-import { CompositionValue } from "../Types/questionTypes";
+import { BooleanAnswer, CompositionValue, MultiChoiceAnswer, OpenEndedAnswer } from "../Types/questionTypes";
 
-import { Question, QuestionTypeLabel, AnswerType, Answer } from "../Types/questionTypes";
+import { Question, QuestionTypeLabel, GenericAnswer, Answer } from "../Types/questionTypes";
 
-import { YES_NO, MULTI_CHOICE, OPEN_ENDED, questionTypesObj } from "../Types/questionTypes";
 
 const useTitle = () =>
 {
@@ -38,41 +37,50 @@ const useClarification = () =>
 
 const useAnswer = () =>
 {
-    const [answer, setAnswer] = useState<AnswerType>(new YES_NO());
-
+    const [answer, setAnswer] = useState<GenericAnswer>(new BooleanAnswer());
+    
     const changeType = (type: QuestionTypeLabel) =>
     {
-        let newType: AnswerType = new YES_NO();
+        let newAnswer;
+        
+        if (type === QuestionTypeLabel.multi_choice) 
+        {            
+            newAnswer = new MultiChoiceAnswer();
 
-        if (type === QuestionTypeLabel['multi-choice']) 
-        {
-            newType = new MULTI_CHOICE()
+            setAnswer(newAnswer)
         }
-        else if (type === QuestionTypeLabel["open-ended"])
+        else if (type === QuestionTypeLabel.open_ended)
         {
-            newType = new OPEN_ENDED()
-        }
+            newAnswer = new OpenEndedAnswer();
 
-        setAnswer(newType)
+            setAnswer(newAnswer)
+        }
+        else 
+        {   
+            setAnswer(new BooleanAnswer())
+        }
     }
 
-    const selectCorrectOption = (questionLabelType: QuestionTypeLabel | undefined, correctAnswerID: number) =>
+    const selectCorrectOption = (correctAnswerID: number) =>
     {
-        if (questionLabelType === QuestionTypeLabel['yes-no'] || questionLabelType === QuestionTypeLabel["multi-choice"]) 
+        const isAnswerChoice = answer.label === QuestionTypeLabel.yes_no || answer.label === QuestionTypeLabel.multi_choice;
+
+        if (isAnswerChoice) 
         {
-            const newAnswer = { ...answer } as (YES_NO | MULTI_CHOICE);
+            const newAnswer = { ...answer };
                 
             newAnswer.correctAnswerID = correctAnswerID
-    
+            
             setAnswer(newAnswer)
         }
     }
 
     const addOption = () =>
-    {
-        if (answer.label === questionTypesObj["multi choice"].label) 
+    {  
+        const isMultiChoice = answer.label === QuestionTypeLabel.multi_choice
+        if (isMultiChoice) 
         {
-            const copyAnswer = { ...answer } as MULTI_CHOICE;
+            const copyAnswer = { ...answer };
 
             const newAnswerItem : Answer =
             {
@@ -88,9 +96,11 @@ const useAnswer = () =>
 
     const editOption = (index: number, newAnswer: Answer) =>
     {
-        if (answer.label === questionTypesObj["multi choice"].label) 
+        const isMultiChoice = answer.label === QuestionTypeLabel.multi_choice;
+
+        if (isMultiChoice) 
         {
-            const copyAnswer = { ...answer } as MULTI_CHOICE;
+            const copyAnswer = { ...answer };
 
             copyAnswer.answers[index] = newAnswer
 
@@ -100,17 +110,20 @@ const useAnswer = () =>
 
     const deleteOption = (index: number) =>
     {
-        if (answer.label === questionTypesObj["multi choice"].label) 
+        const isMultiChoice = answer.label === QuestionTypeLabel.multi_choice;
+
+        if (isMultiChoice) 
         {
-            const newAnswer = { ...answer } as MULTI_CHOICE;
+            const newAnswer = { ...answer };
+
 
             const chosenAnswer = newAnswer.answers[index];
 
             newAnswer.answers.splice(index, 1);
-
+    
             if (chosenAnswer?.id === newAnswer.correctAnswerID) 
             {
-                newAnswer.correctAnswerID = null
+                newAnswer.correctAnswerID = -1
             }
 
             setAnswer(newAnswer);
@@ -121,21 +134,19 @@ const useAnswer = () =>
     {
         let arePossibleAnswersValid = false;
 
-        if (answer?.label === QuestionTypeLabel['yes-no']) 
+        if (answer.label === QuestionTypeLabel.yes_no) 
         {            
             arePossibleAnswersValid = true
         }
-        else if (answer?.label === QuestionTypeLabel["multi-choice"])
+        else if (answer.label === QuestionTypeLabel.multi_choice)
         {
-            const multi_choice_answer = (answer as MULTI_CHOICE);
-
-            const allAnswersValid = !(multi_choice_answer.answers.some(answer => !answer?.composition.isValid));
-            const isSelectedAnswerValid = multi_choice_answer?.correctAnswerID !== null;
-            const meetsMinimumAmount = multi_choice_answer.doesMeetMinimum();
+            const allAnswersValid = !(answer.answers).some(answer => !answer?.composition.isValid);
+            const isSelectedAnswerValid = answer?.correctAnswerID > -1;
+            const meetsMinimumAmount = (answer as MultiChoiceAnswer)?.doesMeetMinimum();
 
             arePossibleAnswersValid = allAnswersValid && isSelectedAnswerValid && meetsMinimumAmount
         }
-        else if (answer?.label === QuestionTypeLabel["open-ended"])
+        else if (answer.label === QuestionTypeLabel.open_ended)
         {
             arePossibleAnswersValid = true
         }
@@ -170,14 +181,17 @@ const useQuestion = (addQuestion: (newQuestion: Question) => void) =>
 
     const saveQuestion = () =>
     {
+        
+        
         const question: Question =
         {
+            id: Math.floor(Math.random() * 9999),
             title: title.value,
             clarification: clarification.value,
             answer: answer.value,
             isValid: isValid
         }
-        
+
         addQuestion(question)
     }
 

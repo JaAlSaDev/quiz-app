@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import Button from '../../../Components/Button'
-import { MULTI_CHOICE, Question, QuestionTypeLabel, YES_NO } from '../../../Types/questionTypes'
+import { BooleanAnswer, GenericAnswer, MultiChoiceAnswer, Question, QuestionTypeLabel } from '../../../Types/questionTypes'
 
 import AlertBox from '../../../Components/AlertBox'
 
@@ -14,7 +14,7 @@ type Props =
 }
 
 
-const AnswersElement = (props: { answer: YES_NO | MULTI_CHOICE }) =>
+const AnswersElement = (props: { answer: GenericAnswer }) =>
 {
     const { correctAnswerID,  } = props.answer;
 
@@ -25,10 +25,7 @@ const AnswersElement = (props: { answer: YES_NO | MULTI_CHOICE }) =>
                 <RadioInputs 
                     style={{
                         container: "flex w-fit gap-3",
-                        radio:
-                        {
-                            container: "gap-3",
-                        }
+                        radio: { container: "gap-3" }
                     }}
                     
                     answer={props.answer}
@@ -42,15 +39,19 @@ const AnswersElement = (props: { answer: YES_NO | MULTI_CHOICE }) =>
 
 const QuestionElement = (props: { index: number, question: Question, deleteQuestion: () => void}) =>
 {
-    const { index, question, deleteQuestion } = props;    
+    const { index, question } = props;    
 
     const [isAlertOn, setIsAlertOn] = useState<boolean>(false);
-
-    const questionType = question.answer?.label;
 
     const answer = question.answer;
 
     const openDeleteDialog = () => setIsAlertOn(true);
+
+    const deleteQuestion = () =>
+    {
+        props.deleteQuestion();
+        setIsAlertOn(false)
+    }
 
     return (
         <>
@@ -80,16 +81,16 @@ const QuestionElement = (props: { index: number, question: Question, deleteQuest
                 }
                 
                 {
-                    questionType !== QuestionTypeLabel["open-ended"]
+                    question.answer?.label !== QuestionTypeLabel.open_ended
                 &&
-                    <div className={`ms-4 mt-2 ${questionType === QuestionTypeLabel["yes-no"] && "flex items-center"}`}>
+                    <div className={`ms-4 mt-2 ${answer?.label === QuestionTypeLabel.yes_no && "flex items-center"}`}>
                         <p>Answers: </p>
 
                         <div className='mt-1 ps-5'>
                             {
-                                (questionType === QuestionTypeLabel["yes-no"] || questionType === QuestionTypeLabel["multi-choice"])
+                                (answer?.label === QuestionTypeLabel.yes_no || answer?.label === QuestionTypeLabel.multi_choice)
                             &&
-                                <AnswersElement answer={answer as (YES_NO | MULTI_CHOICE)} />
+                                <AnswersElement answer={answer as (BooleanAnswer | MultiChoiceAnswer)} />
                             }
                         </div>
                     </div>
@@ -119,7 +120,7 @@ const QuestionElement = (props: { index: number, question: Question, deleteQuest
             {questions.map((question, index) => 
             (
                 <QuestionElement 
-                    key={question.title.value} 
+                    key={question.id} 
                     index={index + 1} 
                     question={question}
                     
