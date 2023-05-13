@@ -4,7 +4,7 @@ import { Answer, MULTI_CHOICE, QuestionTypeLabel, YES_NO } from '../../../Types/
 
 import Button from '../../../Components/Button';
 
-import RadioInputs from '../../../Components/RadioInputs';
+import RadioInputs from '../../../Components/InputFields/RadioInputs';
 
 type Props = 
 {

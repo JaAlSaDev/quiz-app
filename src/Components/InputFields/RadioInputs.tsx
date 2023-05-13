@@ -1,7 +1,9 @@
 import React from 'react'
 
-import { Answer, AnswerType, CompositionValue, MULTI_CHOICE, QuestionTypeLabel, YES_NO } from '../Types/questionTypes'
-import MultiChoiceInput from '../Pages/CreateQuiz/Components/MultiChoiceInput'
+import Button from '../Button'
+
+import { Answer, AnswerType, CompositionValue, MULTI_CHOICE, QuestionTypeLabel, YES_NO } from '../../Types/questionTypes'
+import MultiChoiceInput from './MultiChoiceInput'
 
 interface RadioProps
 {
@@ -18,8 +20,9 @@ interface RadioProps
     correctAnswerID: number
     possibleAnswer: Answer,
 
-    changeValue: (answer: number) => void,
-    editAnswer: (answer: Answer) => void
+    changeValue: (answerID: number) => void,
+    editAnswer: (answer: Answer) => void,
+    deleteAnswer: (answerID: number) => void
 }
 
 
@@ -45,10 +48,6 @@ const RadioInput = (props: RadioProps) =>
             props.editAnswer(possibleAnswerCopy)
         }
     }
-
-    console.log("correctAnswerID: ", correctAnswerID);
-    
-    console.log("possibleAnswer: ", possibleAnswer);
     
     
     return (
@@ -65,14 +64,25 @@ const RadioInput = (props: RadioProps) =>
             ? 
                 <p>{possibleAnswer?.composition.value}</p>
             :
-                <MultiChoiceInput 
-                    style={{
-                        container: "w-full self-center top-4",
-                        label: "font-bold",
-                        input: "border-black border px-2",
-                        underline: "h-[2px] mt-1"
-                    }}
-                onChange={editAnswer} />
+                <>
+                    <MultiChoiceInput 
+                        style={{
+                            container: "w-full self-center top-4",
+                            label: "font-bold",
+                            input: "border-black border px-2",
+                            underline: "h-[2px] mt-1"
+                        }}
+
+                        onChange={editAnswer} 
+                    />
+
+                    <Button 
+                        className="px-2 rounded-sm bg-red-500 text-md font-bold text-white"
+                        text={"X"}
+                        isDisabled={false}
+                        onClick={props.deleteAnswer}
+                    />
+                </>
             }
         </div>
     )
@@ -122,7 +132,13 @@ const RadioInputs = (props: RadioInputsProps) =>
         }
     }
 
-    console.log("answer?.correctAnswerID as number: ", answer?.correctAnswerID as number);
+    const deleteAnswer = (index: number) =>
+    {
+        if (props?.deleteAnswer) 
+        {
+            props.deleteAnswer(index)
+        }
+    }
     
   return (
     <div className={`${style?.container} ${answer.label === QuestionTypeLabel["multi-choice"] && "flex flex-col"}`}>
@@ -143,6 +159,7 @@ const RadioInputs = (props: RadioInputsProps) =>
 
                         changeValue={changeValue}
                         editAnswer={(editedAnswer: Answer) =>  editAnswer(index, editedAnswer)}
+                        deleteAnswer={() => deleteAnswer(index)}
                     />
                 )
             }

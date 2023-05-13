@@ -1,8 +1,11 @@
-import React from 'react'
+import { useState } from 'react'
 
 import Button from '../../../Components/Button'
 import { MULTI_CHOICE, Question, QuestionTypeLabel, YES_NO } from '../../../Types/questionTypes'
-import RadioInputs from '../../../Components/RadioInputs'
+
+import AlertBox from '../../../Components/AlertBox'
+
+import RadioInputs from '../../../Components/InputFields/RadioInputs'
 
 type Props = 
 {
@@ -41,55 +44,69 @@ const QuestionElement = (props: { index: number, question: Question, deleteQuest
 {
     const { index, question, deleteQuestion } = props;    
 
+    const [isAlertOn, setIsAlertOn] = useState<boolean>(false);
+
     const questionType = question.answer?.label;
 
     const answer = question.answer;
 
+    const openDeleteDialog = () => setIsAlertOn(true);
+
     return (
-        <div className='bg-blue-100'>
-            <div className='w-full flex justify-between items-center'>
-                <p>
-                    <span className='font-bold'>{index}: </span>
-                    <span>{question.title.value}</span>
-                </p>
+        <>
+            <div className='bg-blue-100'>
+                <div className='w-full flex justify-between items-center'>
+                    <p>
+                        <span className='font-bold'>{index}: </span>
+                        <span>{question.title.value}</span>
+                    </p>
 
-                <Button 
-                    className="px-3 text-lg rounded-lg bg-red-500"
-                    text={"Remove"}
-                    isDisabled={false}
-                    onClick={deleteQuestion}
-                />
-            </div>
-           
-
-            {
-                question.clarification?.value 
-            &&
-                <p className='ms-12 text-sm'>
-                    <span className='font-bold'>Clarification: </span> 
-                    <span>{question.clarification?.value}</span>
-                </p>
-            }
-            
-
-
-            {
-                questionType !== QuestionTypeLabel["open-ended"]
-            &&
-                <div className={`ms-4 mt-2 ${questionType === QuestionTypeLabel["yes-no"] && "flex items-center"}`}>
-                    <p>Answers: </p>
-
-                    <div className='mt-1 ps-5'>
-                        {
-                            (questionType === QuestionTypeLabel["yes-no"] || questionType === QuestionTypeLabel["multi-choice"])
-                        &&
-                            <AnswersElement answer={answer as (YES_NO | MULTI_CHOICE)}/>
-                        }
-                    </div>
+                    <Button 
+                        className="px-2 rounded-sm bg-red-500 text-md font-bold text-white"
+                        text={"X"}
+                        isDisabled={false}
+                        onClick={openDeleteDialog}
+                    />
                 </div>
-            }
             
-        </div>
+
+                {
+                    question.clarification?.value 
+                &&
+                    <p className='ms-12 text-sm'>
+                        <span className='font-bold'>Clarification: </span> 
+                        <span>{question.clarification?.value}</span>
+                    </p>
+                }
+                
+                {
+                    questionType !== QuestionTypeLabel["open-ended"]
+                &&
+                    <div className={`ms-4 mt-2 ${questionType === QuestionTypeLabel["yes-no"] && "flex items-center"}`}>
+                        <p>Answers: </p>
+
+                        <div className='mt-1 ps-5'>
+                            {
+                                (questionType === QuestionTypeLabel["yes-no"] || questionType === QuestionTypeLabel["multi-choice"])
+                            &&
+                                <AnswersElement answer={answer as (YES_NO | MULTI_CHOICE)} />
+                            }
+                        </div>
+                    </div>
+                }
+                
+            </div>
+
+           {
+                isAlertOn 
+            && 
+                <AlertBox 
+                    message={`Are you sure you want to remove question #${index}?`}
+                    confirm={deleteQuestion}
+                    cancel={() => setIsAlertOn(false)}
+                />
+            }
+        </>
     )
 }
 

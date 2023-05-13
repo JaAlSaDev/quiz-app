@@ -1,6 +1,6 @@
 import React from 'react'
-import { InputFieldStyle, ValidationRule } from '../../../Types/inputTypes'
-import InputValidationField from '../../../Components/InputValidationField'
+import { InputFieldStyle, ValidationRule } from '../../Types/inputTypes'
+import InputValidationField from './InputValidationField'
 
 type Props = 
 {
@@ -8,9 +8,7 @@ type Props =
     onChange: (e: {value: string, isValid: boolean}) => void
 }
 
-const QuestionTitleInput = (props: Props) => 
-{
-    const validationRules: ValidationRule[] =
+const validationRules: ValidationRule[] =
     [
         {
             checkValidity: (value: string) => value.length > 2,
@@ -22,6 +20,8 @@ const QuestionTitleInput = (props: Props) =>
         }
     ]
 
+const QuestionTitleInput = (props: Props) => 
+{
   return (
    <InputValidationField 
         style={props?.style}

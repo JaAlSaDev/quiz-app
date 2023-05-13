@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { InputFieldStyle, ValidationRule } from '../Types/inputTypes';
+import { InputFieldStyle, ValidationRule } from '../../Types/inputTypes';
 import InputField from './InputField';
 
-import { CompositionValue } from '../Types/questionTypes';
+import { CompositionValue } from '../../Types/questionTypes';
 type Props = 
 {
     style?: InputFieldStyle

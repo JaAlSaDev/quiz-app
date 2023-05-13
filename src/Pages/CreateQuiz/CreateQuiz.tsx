@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Button from '../../Components/Button'
-import MainPage from '../MainPage'
 import DetailsSection from './Components/DetailsSection'
 import { CompositionValue, Question } from '../../Types/questionTypes'
 import QuestionsSection from './Components/QuestionsSection'
@@ -63,7 +62,6 @@ const CreateQuizPage = (props: Props) =>
 
     const saveQuiz = () => 
     {
-
         if (isValid) 
         {
             const quizesString = localStorage?.getItem("quizes");
@@ -86,6 +84,7 @@ const CreateQuizPage = (props: Props) =>
 
             props.navigateToMainPage();
         }
+        
         console.log("Saving quiz now...");
     }
 
@@ -98,7 +97,6 @@ const CreateQuizPage = (props: Props) =>
         const areQuizDetailsValid = !Object.values(details).some(field => !field.isValid);
         
         const areQuestionsValid = !questions.some(question => !question.isValid) && questions.length > 2 && questions.length < 9;
-
 
         const isAllValid = areQuizDetailsValid && areQuestionsValid ;
               
@@ -116,7 +114,7 @@ const CreateQuizPage = (props: Props) =>
                 deleteQuestion={deleteQuestion}
             />
             
-            <div className='w-full bg-blue-100 flex justify-center my-4'>
+            <div className='w-full flex justify-center my-4'>
                 <Button 
                     className="w-fit px-3 py-2 text-lg rounded-lg"
                     text={"Save Quiz"}

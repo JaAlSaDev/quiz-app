@@ -1,3 +1,8 @@
+/* 
+    Most of these types/enums could be renamed, simplified, and refactored.
+*/ 
+
+
 export type CompositionValue = { value: string, isValid: boolean }
 
 export enum QuestionTypeLabel
@@ -38,7 +43,7 @@ export class MULTI_CHOICE
     correctAnswerID: number | null = null;
     answers: Answer[] = [];
 
-     doesMeetMinimum = (): boolean =>
+    doesMeetMinimum = (): boolean =>
     {
         const answers = this.answers;
         const { min } = this.answersSize
@@ -65,10 +70,11 @@ export type AnswerType = YES_NO | MULTI_CHOICE | OPEN_ENDED
 
 export type Question =
 {
+    isValid: boolean
+
     title: CompositionValue,
     clarification?: CompositionValue,
-    answer?: AnswerType,
-    isValid: boolean
+    answer?: AnswerType,   
 }
 
 export const typesArray = Object.values(QuestionTypeLabel);

@@ -1,8 +1,8 @@
 import React from 'react'
-import { InputFieldStyle, ValidationRule } from '../../../Types/inputTypes'
+import { InputFieldStyle, ValidationRule } from '../../Types/inputTypes'
 
-import InputValidationField from '../../../Components/InputValidationField'
-import { CompositionValue } from '../../../Types/questionTypes'
+import InputValidationField from './InputValidationField'
+import { CompositionValue } from '../../Types/questionTypes'
 
 type Props = 
 {
@@ -10,10 +10,7 @@ type Props =
     onChange: (e: CompositionValue) => void
 }
 
-
-const MultiChoiceInput = (props: Props) => 
-{
-    const validationRules: ValidationRule[] =
+const validationRules: ValidationRule[] =
     [
         {
             checkValidity: (value: string) => value.length > 0,
@@ -24,6 +21,11 @@ const MultiChoiceInput = (props: Props) =>
             errorMessage: "The answer must not be longer than 50 characters."
         }
     ]
+    
+
+const MultiChoiceInput = (props: Props) => 
+{
+    
 
   return (
    <InputValidationField 
