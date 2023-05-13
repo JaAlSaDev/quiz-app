@@ -11,9 +11,3 @@ export type InputFieldStyle =
     input?: string,
     underline?: string 
 }
-
-export type CompositionValue =
-{
-    value: string,
-    isValid: boolean
-}

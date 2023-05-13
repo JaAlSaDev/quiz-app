@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { InputFieldStyle, ValidationRule } from '../Types/types';
+import { InputFieldStyle, ValidationRule } from '../../Types/inputTypes';
 import InputField from './InputField';
 
-import { CompositionValue } from '../Types/types';
+import { CompositionValue } from '../../Types/questionTypes';
 type Props = 
 {
     style?: InputFieldStyle
-    label: string,
+    label?: string,
 
     validationRules: ValidationRule[]
     isOptional: boolean;
@@ -27,7 +27,7 @@ const InputValidationField = (props: Props) =>
     {
         let isValid = true;
         let errorMessage = "";
-
+        
         if (!props.isOptional || value.length > 0) 
         {
             const validationRules = props.validationRules;
@@ -45,6 +45,10 @@ const InputValidationField = (props: Props) =>
                }
             }
         }
+        else
+        {
+
+        }
 
         return { isValid, errorMessage }
     }
@@ -53,26 +57,25 @@ const InputValidationField = (props: Props) =>
     {
         const hasInteractedWithInputField = hasFocused && hasTyped;
         
-        if (!hasInteractedWithInputField) 
+        if (hasInteractedWithInputField) 
         {
-            return
-        }
+            const { isValid, errorMessage } = validateInput();
 
-        const { isValid, errorMessage } = validateInput();
-
-        setErrorMessage(errorMessage);
+            setErrorMessage(errorMessage);
         
-        setCompositionValue({ value: value, isValid: isValid })
-      
-    }, [value, hasFocused])
+            setCompositionValue({ value: value, isValid: isValid })
+        }
+    }, [value, hasFocused, hasTyped])
 
 
-    useEffect(() => props.onChange(compositionValue), [compositionValue])
+    useEffect(() => {        
+        props.onChange(compositionValue)
+    }, [compositionValue])
         
     return (
         <InputField 
             style={props?.style}
-            label={props.label}
+            label={props?.label}
             hasFocused={hasFocused}
 
             errorMessage={errorMessage}

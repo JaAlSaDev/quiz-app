@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import Button from './Button';
+import { useState, useEffect } from 'react'
+import Button from '../Button';
 
 type Props = 
 {

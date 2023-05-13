@@ -12,7 +12,7 @@ type Props =
         underline?: string
     }
 
-    label: string,
+    label?: string,
     hasFocused: boolean,
     errorMessage?: string,
 
@@ -47,7 +47,8 @@ const InputField = (props: Props) =>
     return (
         <div className={`relative ${style?.container}`}>
             <div className='w-full'>
-                <label className={style?.label}>{props.label}</label>
+
+                {props?.label && <label className={style?.label}>{props.label}</label>}
 
                 <input 
                     className={`w-full outline-0 bg-transparent ${style?.input}`}
@@ -63,7 +64,7 @@ const InputField = (props: Props) =>
                 <>
                     <div className={`w-full ${props?.errorMessage? "bg-red-500": "bg-gray-500"} ${style?.underline}`}/>
 
-                    <div className='mt-2 h-4 mb-4'>
+                    <div className='mt-2 h-4 mb-1'>
                         {props.errorMessage && <p className='text-sm text-red-500'>{props.errorMessage}</p>}
                     </div>
                 </>

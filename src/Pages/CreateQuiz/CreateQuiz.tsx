@@ -1,78 +1,38 @@
-import React, { useState, useEffect } from 'react'
 import Button from '../../Components/Button'
-import MainPage from '../MainPage'
 import DetailsSection from './Components/DetailsSection'
-import { CompositionValue } from '../../Types/types'
+import QuestionsSection from './Components/QuestionsSection'
+import useQuiz from '../../hooks/useQuiz'
 
-type Props = {}
-
-type QuizContents =
-{
-    "details": 
-    {
-        [index: string]: CompositionValue
-    },
-    "questions": 
-    {
-        [index: string]: object
-    },
-}
+type Props = { navigateToMainPage: () => void }
 
 const CreateQuizPage = (props: Props) => 
 {
-    const [isValid, setisValid] = useState<boolean>(false)
-    const [quizContents, setQuizContents] = useState<QuizContents>({ details: {}, questions: {} })
-
-    const editQuizDetails = (key: string, value: CompositionValue) =>
-    {        
-        setQuizContents(oldQuizContents =>
-        {
-            const newQuizContents = { ...oldQuizContents };
-
-            newQuizContents.details[key] = value;
-
-            return newQuizContents;
-        })
-    }
-
-    const editQuizQuestions = (key: string, value: CompositionValue) =>
-    {
-        setQuizContents(oldQuizContents =>
-        {
-            const newQuizContents = { ...oldQuizContents };
-
-            newQuizContents.questions[key] = value;
-
-            return newQuizContents;
-        })
-    }
-
-    const saveQuiz = () => {}
-
-
-    useEffect(() => 
-    {
-        console.log("quizContents: ", quizContents);
-        
-        const quizDetailsFields = Object.values(quizContents.details);
-        
-        const isAllValid = !quizDetailsFields.some(field => !field.isValid)
-              
-        setisValid(isAllValid)
-    }, [quizContents])
-
+    const 
+    { 
+        isValid, 
+        details, 
+        questions, 
+        save 
+    } = useQuiz(props.navigateToMainPage);
     
-    useEffect(() => {
-      console.log("isQuizValid: ", isValid);
-      
-    }, [isValid])
-    
-
     return (
-        <div className='w-[75%]'>
-            <DetailsSection 
-                editQuizDetails={editQuizDetails}
+        <div className='w-[75%] flex flex-col gap-3 overflow-y-scroll'>
+            <DetailsSection editQuizDetails={details.edit} />
+
+            <QuestionsSection 
+                questions={questions.value} 
+                addQuestion={questions.add}
+                deleteQuestion={questions.remove}
             />
+            
+            <div className='w-full flex justify-center my-4'>
+                <Button 
+                    className="w-fit px-3 py-2 text-lg rounded-lg"
+                    text={"Save Quiz"}
+                    isDisabled={!isValid}
+                    onClick={save}
+                />
+            </div>
         </div>
     )
 }

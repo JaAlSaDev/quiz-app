@@ -4,6 +4,7 @@ import MainPage from "./Pages/MainPage"
 import CreateQuizPage from "./Pages/CreateQuiz/CreateQuiz"
 
 import "./App.css"
+import ViewPage from "./Pages/ViewPage"
 
 enum Pages 
 {  
@@ -16,6 +17,8 @@ const App = () =>
 {
     const [currentPage, setCurrentPage] = useState<Pages>(Pages.MAIN_PAGE)
 
+    const navigateToMainPage = () => setCurrentPage(Pages.MAIN_PAGE);
+
     const navigateToCreatePage = () => setCurrentPage(Pages.CREATE_PAGE);
 
     const navigateToViewPage = () => setCurrentPage(Pages.VIEW_PAGE);
@@ -27,8 +30,12 @@ const App = () =>
             navigateToCreatePage={navigateToCreatePage} 
             navigateToViewPage={navigateToViewPage}
           />,
-        [Pages.CREATE_PAGE]: <CreateQuizPage />,
-        [Pages.VIEW_PAGE]: <></>
+
+        [Pages.CREATE_PAGE]: 
+          <CreateQuizPage navigateToMainPage={navigateToMainPage} />,
+
+        [Pages.VIEW_PAGE]: 
+          <ViewPage navigateToMainPage={navigateToMainPage} />
     }
 
   return (

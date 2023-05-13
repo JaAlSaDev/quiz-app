@@ -7,9 +7,9 @@ type Props =
     navigateToViewPage: Function
 }
 
+
 const MainPage = (props: Props) => 
 {
-
     const { navigateToCreatePage, navigateToViewPage } = props
 
     return (
