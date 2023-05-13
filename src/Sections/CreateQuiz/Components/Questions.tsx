@@ -10,9 +10,8 @@ import RadioInputs from '../../../Components/InputFields/RadioInputs'
 type Props = 
 {
     questions: Question[],
-    deleteQuestion: (index: number) => void
+    deleteQuestion?: (index: number) => void
 }
-
 
 const AnswersElement = (props: { answer: GenericAnswer }) =>
 {
@@ -37,9 +36,9 @@ const AnswersElement = (props: { answer: GenericAnswer }) =>
     )
 }
 
-const QuestionElement = (props: { index: number, question: Question, deleteQuestion: () => void}) =>
+const QuestionElement = (props: { isView: boolean, index: number, question: Question, deleteQuestion: () => void}) =>
 {
-    const { index, question } = props;    
+    const { isView, index, question } = props;    
 
     const [isAlertOn, setIsAlertOn] = useState<boolean>(false);
 
@@ -55,19 +54,23 @@ const QuestionElement = (props: { index: number, question: Question, deleteQuest
 
     return (
         <>
-            <div className='bg-blue-100'>
+            <div className=''>
                 <div className='w-full flex justify-between items-center'>
                     <p>
                         <span className='font-bold'>{index}: </span>
                         <span>{question.title.value}</span>
                     </p>
 
-                    <Button 
-                        className="px-2 rounded-sm bg-red-500 text-md font-bold text-white"
-                        text={"X"}
-                        isDisabled={false}
-                        onClick={openDeleteDialog}
-                    />
+                    {
+                        !isView
+                    && 
+                        <Button 
+                            className="px-2 rounded-sm bg-red-500 text-md font-bold text-white"
+                            text={"X"}
+                            isDisabled={false}
+                            onClick={openDeleteDialog}
+                        />
+                    }
                 </div>
             
 
@@ -113,18 +116,26 @@ const QuestionElement = (props: { index: number, question: Question, deleteQuest
 
  const Questions = (props: Props) => 
 {
-    const { questions, deleteQuestion } = props
+    const { questions } = props
+
+    const isView = !props?.deleteQuestion;
     
     return (
         <div className='flex flex-col gap-3 ms-10'>
             {questions.map((question, index) => 
             (
                 <QuestionElement 
-                    key={question.id} 
+                    key={question.id}
+                    isView={isView} 
                     index={index + 1} 
                     question={question}
                     
-                    deleteQuestion={() => deleteQuestion(index)}
+                    deleteQuestion={() => {
+                        if (props?.deleteQuestion) 
+                        {
+                            props.deleteQuestion(index)  
+                        }
+                    }}
                 />
             ))}
         </div>

@@ -1,48 +1,40 @@
 import { useState } from "react"
 
-import MainPage from "./Pages/MainPage"
-import CreateQuizPage from "./Pages/CreateQuiz/CreateQuiz"
+import CreateQuizPage from "./Sections/CreateQuiz/CreateQuiz"
+
+import Button from "./Components/Button"
 
 import "./App.css"
-import ViewPage from "./Pages/ViewPage"
-
-enum Pages 
-{  
-    MAIN_PAGE, 
-    CREATE_PAGE, 
-    VIEW_PAGE 
-};
+import Quizes from "./Sections/ViewQuizes/Quizes"
 
 const App = () => 
 {
-    const [currentPage, setCurrentPage] = useState<Pages>(Pages.MAIN_PAGE)
+    const [isCreateQuizOn, setIsCreateQuizOn] = useState<boolean>(false)
 
-    const navigateToMainPage = () => setCurrentPage(Pages.MAIN_PAGE);
+    const closeQuizForm = () => setIsCreateQuizOn(false);
 
-    const navigateToCreatePage = () => setCurrentPage(Pages.CREATE_PAGE);
-
-    const navigateToViewPage = () => setCurrentPage(Pages.VIEW_PAGE);
-
-    const PagesObject =
-    {
-        [Pages.MAIN_PAGE]: 
-          <MainPage 
-            navigateToCreatePage={navigateToCreatePage} 
-            navigateToViewPage={navigateToViewPage}
-          />,
-
-        [Pages.CREATE_PAGE]: 
-          <CreateQuizPage navigateToMainPage={navigateToMainPage} />,
-
-        [Pages.VIEW_PAGE]: 
-          <ViewPage navigateToMainPage={navigateToMainPage} />
-    }
+    const openQuizForm = () => setIsCreateQuizOn(true);
 
   return (
     <div className="h-screen w-screen flex flex-col items-center">
         <p className="h-fit my-3 text-7xl text-center">Ultimate Quiz Creator</p>
+        
+        <p>Welcome to the quiz creator...</p>
 
-        {PagesObject[currentPage]}
+            <p>How can I help you?</p>
+
+            <div className="flex h-fit mt-4 gap-3">
+                <Button 
+                    className="py-3 px-4 rounded-lg"
+                    text={"Create a new quiz!"}
+                    onClick={openQuizForm}
+                />
+            </div>
+
+
+        <Quizes isCreateQuizOn={isCreateQuizOn} />
+
+        {isCreateQuizOn && <CreateQuizPage closeQuizForm={closeQuizForm} />}
     </div>
   );
 }
