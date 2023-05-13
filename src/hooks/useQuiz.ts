@@ -6,6 +6,7 @@ import { CompositionValue } from "../Types/questionTypes"
 
 type QuizContents =
 {
+    "id": number,
     "details": { [index: string]: CompositionValue },
     "questions": Question[]
 }
@@ -87,7 +88,7 @@ const useQuestions = () =>
     }
 }
 
-const useQuiz = (goHome: () => void) =>
+const useQuiz = (closeQuizForm: () => void) =>
 {
     const [isValid, setisValid] = useState<boolean>(false)
     const details = useDetails();
@@ -99,6 +100,7 @@ const useQuiz = (goHome: () => void) =>
         {
             const quiz: QuizContents =
             {
+                id: Math.floor(Math.random() * 9999),
                 details: details.value,
                 questions: questions.value
             }
@@ -111,7 +113,6 @@ const useQuiz = (goHome: () => void) =>
 
                 quizes.push(quiz)
 
-
                 localStorage.setItem("quizes", JSON.stringify(quizes))
             }
             else
@@ -121,16 +122,14 @@ const useQuiz = (goHome: () => void) =>
                 localStorage.setItem("quizes", JSON.stringify(quizes))
             }
 
-            goHome();
+            closeQuizForm();
         }
 
         console.log("Saving quiz now...");
     }
 
     useEffect(() => 
-    {            
-        console.log("details: ", details);
-              
+    {                          
         const isAllValid = details.isValid() && questions.isValid();
               
         setisValid(isAllValid)
