@@ -10,11 +10,12 @@ type Props =
 {
     questions: Question[],
     addQuestion: (questions: Question) => void,
+    deleteQuestion: (index: number) => void
 }
 
 const QuestionsSection = (props: Props) => 
 {
-    const { questions } = props;
+    const { questions, deleteQuestion } = props;
 
     const [isFormOn, setIsFormOn] = useState<boolean>(false);
 
@@ -46,7 +47,10 @@ const QuestionsSection = (props: Props) =>
                 }
             </div>
 
-            <Questions questions={questions} />
+            <Questions 
+                questions={questions}
+                deleteQuestion={deleteQuestion}
+             />
 
            {isFormOn && <QuestionForm addQuestion={addQuestion}/>}
         </div>

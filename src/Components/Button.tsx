@@ -14,7 +14,7 @@ const Button = (props: Props) =>
 
     return (
         <div 
-            className={`h-fit w-fit ${className} ${isDisabled? "bg-gray-300 cursor-not-allowed": `bg-[#ee9a00] cursor-pointer`} `} 
+            className={`h-fit w-fit ${isDisabled? "bg-gray-300 cursor-not-allowed": `bg-[#ee9a00] cursor-pointer`} ${className}`} 
             onClick={() => 
                 {
                     if (!isDisabled) 

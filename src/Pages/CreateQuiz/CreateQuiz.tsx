@@ -5,7 +5,10 @@ import DetailsSection from './Components/DetailsSection'
 import { CompositionValue, Question } from '../../Types/questionTypes'
 import QuestionsSection from './Components/QuestionsSection'
 
-type Props = {}
+type Props = 
+{
+    navigateToMainPage: () => void
+}
 
 type QuizContents =
 {
@@ -42,20 +45,49 @@ const CreateQuizPage = (props: Props) =>
         })
     }
 
-    const saveQuizQuestions = (questions: Question[]) =>
+    const deleteQuestion = (index: number) =>
     {
         setQuizContents(oldQuizContents =>
         {
             const newQuizContents = { ...oldQuizContents };
 
-            newQuizContents.questions = questions;
+            const newQuestions = [...newQuizContents.questions];
+            
+            newQuestions.splice(index, 1);
+
+            newQuizContents.questions = newQuestions
 
             return newQuizContents;
         })
     }
 
-    const saveQuiz = () => {}
+    const saveQuiz = () => 
+    {
 
+        if (isValid) 
+        {
+            const quizesString = localStorage?.getItem("quizes");
+
+            if (quizesString) 
+            {
+                const quizes = JSON.parse(quizesString);
+
+                quizes.push(quizContents)
+
+
+                localStorage.setItem("quizes", JSON.stringify(quizes))
+            }
+            else
+            {
+                const quizes = [quizContents];
+
+                localStorage.setItem("quizes", JSON.stringify(quizes))
+            }
+
+            props.navigateToMainPage();
+        }
+        console.log("Saving quiz now...");
+    }
 
     useEffect(() => 
     {
@@ -72,11 +104,6 @@ const CreateQuizPage = (props: Props) =>
               
         setisValid(isAllValid)
     }, [quizContents])
-
-    
-    useEffect(() => {
-      console.log("isQuizValid: ", isValid);
-    }, [isValid])
     
 
     return (
@@ -86,9 +113,9 @@ const CreateQuizPage = (props: Props) =>
             <QuestionsSection 
                 questions={quizContents.questions} 
                 addQuestion={addQuestion}
+                deleteQuestion={deleteQuestion}
             />
             
-
             <div className='w-full bg-blue-100 flex justify-center my-4'>
                 <Button 
                     className="w-fit px-3 py-2 text-lg rounded-lg"

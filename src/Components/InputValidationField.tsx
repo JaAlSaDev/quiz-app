@@ -6,7 +6,7 @@ import { CompositionValue } from '../Types/questionTypes';
 type Props = 
 {
     style?: InputFieldStyle
-    label: string,
+    label?: string,
 
     validationRules: ValidationRule[]
     isOptional: boolean;
@@ -27,7 +27,7 @@ const InputValidationField = (props: Props) =>
     {
         let isValid = true;
         let errorMessage = "";
-
+        
         if (!props.isOptional || value.length > 0) 
         {
             const validationRules = props.validationRules;
@@ -45,6 +45,10 @@ const InputValidationField = (props: Props) =>
                }
             }
         }
+        else
+        {
+
+        }
 
         return { isValid, errorMessage }
     }
@@ -61,17 +65,17 @@ const InputValidationField = (props: Props) =>
         
             setCompositionValue({ value: value, isValid: isValid })
         }
-    }, [value, hasFocused])
+    }, [value, hasFocused, hasTyped])
 
 
-    useEffect(() => {
+    useEffect(() => {        
         props.onChange(compositionValue)
     }, [compositionValue])
         
     return (
         <InputField 
             style={props?.style}
-            label={props.label}
+            label={props?.label}
             hasFocused={hasFocused}
 
             errorMessage={errorMessage}

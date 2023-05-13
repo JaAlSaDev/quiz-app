@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import Button from '../../../Components/Button'
-import { Question, CompositionValue, typesArray, questionTypesObj, YES_NO, QuestionTypeLabel, AnswerType, Answer } from '../../../Types/questionTypes'
+import { Question, CompositionValue, typesArray, questionTypesObj, YES_NO, QuestionTypeLabel, AnswerType, Answer, MULTI_CHOICE, OPEN_ENDED } from '../../../Types/questionTypes'
 import DropDownField from '../../../Components/DropDownField'
 import QuestionTitleInput from './QuestionTitleInput'
 import ClarificationInput from './ClarificationInput'
@@ -18,60 +18,86 @@ const QuestionForm = (props: Props) =>
 
     const [title, setTitle] = useState<CompositionValue>({ value: "", isValid: false });
     const [clarification, setClarification] = useState<CompositionValue>({ value: "", isValid: true })
-    const [answer, setAnswer] = useState<AnswerType>(questionTypesObj["yes-no"]);
-
+    const [answer, setAnswer] = useState<AnswerType>(new YES_NO());
+    
+    console.log("answer: ", answer);
+    
     const editTitle = (value: CompositionValue) => setTitle(value);
 
     const editClarification = (value: CompositionValue) => setClarification(value);
 
     const changeType = (type: QuestionTypeLabel) =>
     {
-        let newAnswer = { ...answer };
+        let newType: AnswerType = new YES_NO();
 
-        newAnswer = questionTypesObj[type];
+        if (type === QuestionTypeLabel['multi-choice']) 
+        {
+            newType = new MULTI_CHOICE()
+        }
+        else if (type === QuestionTypeLabel["open-ended"])
+        {
+            newType = new OPEN_ENDED()
+        }
 
-        setAnswer(newAnswer)
+        setAnswer(newType)
     }
 
-    const editCorrectAnswer = (questionLabelType: QuestionTypeLabel | undefined, correctAnswer: Answer) =>
+    const editCorrectAnswer = (questionLabelType: QuestionTypeLabel | undefined, correctAnswerID: number) =>
     {
-        if (questionLabelType === QuestionTypeLabel['yes-no']) 
+        if (questionLabelType === QuestionTypeLabel['yes-no'] || questionLabelType === QuestionTypeLabel["multi-choice"]) 
         {
-            const newAnswer = { ...answer } as YES_NO;
+            const newAnswer = { ...answer } as (YES_NO | MULTI_CHOICE);
     
-            newAnswer.correctAnswer = correctAnswer
+            console.log("newAnswer: ", newAnswer);
+            
+            newAnswer.correctAnswerID = correctAnswerID
     
             setAnswer(newAnswer)
         }
     }
 
-    const getAnswerElement = (questionLabelType: (QuestionTypeLabel | undefined)): JSX.Element =>
+    
+    const addAnswer = () =>
     {
-        if (questionLabelType === QuestionTypeLabel['yes-no']) 
+        if (answer.label === questionTypesObj["multi choice"].label) 
         {
-            const booleanAnswer = answer as YES_NO;
+            const copyAnswer = { ...answer } as MULTI_CHOICE;
 
-            return <AnswerSection 
-                        style={
-                            {
-                                container: "flex w-fit gap-3",
-                                radio:
-                                {
-                                    container: "gap-3",
-                                }
-                            }
-                        }
-                        correctAnswer={booleanAnswer.correctAnswer} 
-                        possibleAnswers={booleanAnswer.answers} 
-                        onChange={(value: Answer) => editCorrectAnswer(questionLabelType, value)}
-                    />
+            const newAnswerItem : Answer =
+            {
+                id: copyAnswer.answers.length,
+                composition: { value: "", isValid: false }
+            }
+
+            copyAnswer.answers.push(newAnswerItem);
+
+            setAnswer(copyAnswer);
         }
-        else if (questionLabelType === QuestionTypeLabel["multi-choice"])
+    }
+
+
+    const editAnswer = (index: number, newAnswer: Answer) =>
+    {
+        if (answer.label === questionTypesObj["multi choice"].label) 
         {
+            const copyAnswer = { ...answer } as MULTI_CHOICE;
 
+            copyAnswer.answers[index] = newAnswer
+
+            setAnswer(copyAnswer);
         }
+    }
 
-        return <></>
+    const deleteAnswer = (index: number) =>
+    {
+        if (answer.label === questionTypesObj["multi choice"].label) 
+        {
+            const newAnswer = { ...answer } as MULTI_CHOICE;
+
+            newAnswer.answers.splice(index, 1);
+
+            setAnswer(newAnswer);
+        }
     }
 
     const saveQuestion = () =>
@@ -84,7 +110,43 @@ const QuestionForm = (props: Props) =>
             isValid: isValid
         }
 
+        console.log("questionquestionquestion: ", question);
+        
         props.addQuestion(question)
+    }
+
+    const getAnswerElement = (questionLabelType: (QuestionTypeLabel | undefined)): JSX.Element =>
+    {
+        if (questionLabelType === QuestionTypeLabel['yes-no'] || questionLabelType === QuestionTypeLabel["multi-choice"]) 
+        {
+            const answerProp = answer as (YES_NO | MULTI_CHOICE);
+
+            return <AnswerSection 
+                        style={
+                            {
+                                container: "flex w-fit gap-3",
+                                radio:
+                                {
+                                    container: "gap-3",
+                                }
+                            }
+                        }
+                        answer={answerProp}
+
+                        onChange={(value: number) => editCorrectAnswer(questionLabelType, value)}
+                        multiChoiceFunctions= 
+                        {
+                            {
+                                addAnswer: addAnswer,
+                                deleteAnswer: deleteAnswer,
+                                editAnswer: editAnswer
+                            }
+                        }
+                        
+                    />
+        }
+
+        return <></>
     }
 
     useEffect(() => 
@@ -95,10 +157,28 @@ const QuestionForm = (props: Props) =>
 
         let arePossibleAnswersValid = false;
 
-        if (answer?.label === QuestionTypeLabel['yes-no'] ) 
+        if (answer?.label === QuestionTypeLabel['yes-no']) 
+        {
+            console.log("answer yes-no: ", answer);
+            
+            arePossibleAnswersValid = true
+        }
+        else if (answer?.label === QuestionTypeLabel["multi-choice"])
+        {
+            const multi_choice_answer = (answer as MULTI_CHOICE);
+
+            const allAnswersValid = !(multi_choice_answer.answers.some(answer => !answer?.composition.isValid));
+            const isSelectedAnswerValid = multi_choice_answer?.correctAnswerID !== null;
+            const meetsMinimumAmount = multi_choice_answer.doesMeetMinimum();
+
+            arePossibleAnswersValid = allAnswersValid && isSelectedAnswerValid && meetsMinimumAmount
+
+        }
+        else if (answer?.label === QuestionTypeLabel["open-ended"])
         {
             arePossibleAnswersValid = true
         }
+        
 
         const isQuestionValied = isTitleValid && isClarificationValid && arePossibleAnswersValid;
         

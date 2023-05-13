@@ -12,7 +12,7 @@ type Props =
         underline?: string
     }
 
-    label: string,
+    label?: string,
     hasFocused: boolean,
     errorMessage?: string,
 
@@ -47,7 +47,8 @@ const InputField = (props: Props) =>
     return (
         <div className={`relative ${style?.container}`}>
             <div className='w-full'>
-                <label className={style?.label}>{props.label}</label>
+
+                {props?.label && <label className={style?.label}>{props.label}</label>}
 
                 <input 
                     className={`w-full outline-0 bg-transparent ${style?.input}`}

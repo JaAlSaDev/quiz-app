@@ -1,20 +1,23 @@
 import React from 'react'
-import { AnswerType, MULTI_CHOICE, Question, QuestionTypeLabel, YES_NO } from '../../../Types/questionTypes'
+
+import Button from '../../../Components/Button'
+import { MULTI_CHOICE, Question, QuestionTypeLabel, YES_NO } from '../../../Types/questionTypes'
 import RadioInputs from '../../../Components/RadioInputs'
 
 type Props = 
 {
-    questions: Question[]
+    questions: Question[],
+    deleteQuestion: (index: number) => void
 }
 
 
 const AnswersElement = (props: { answer: YES_NO | MULTI_CHOICE }) =>
 {
-    const { correctAnswer, answers } = props.answer;
+    const { correctAnswerID,  } = props.answer;
 
     return (
         <>
-            {correctAnswer && 
+            {( typeof correctAnswerID === "number" ) && 
             
                 <RadioInputs 
                     style={{
@@ -24,8 +27,8 @@ const AnswersElement = (props: { answer: YES_NO | MULTI_CHOICE }) =>
                             container: "gap-3",
                         }
                     }}
-                    possibleAnswers={answers}
-                    correctAnswer={correctAnswer}
+                    
+                    answer={props.answer}
                     isDisabled={true}
                 />
             
@@ -34,9 +37,9 @@ const AnswersElement = (props: { answer: YES_NO | MULTI_CHOICE }) =>
     )
 }
 
-const QuestionElement = (props: { index: number, question: Question}) =>
+const QuestionElement = (props: { index: number, question: Question, deleteQuestion: () => void}) =>
 {
-    const { index, question } = props;    
+    const { index, question, deleteQuestion } = props;    
 
     const questionType = question.answer?.label;
 
@@ -44,36 +47,56 @@ const QuestionElement = (props: { index: number, question: Question}) =>
 
     return (
         <div className='bg-blue-100'>
-            <p>
-                <span className='font-bold'>{index}: </span>
-                <span>{question.title.value}</span>
-            </p>
+            <div className='w-full flex justify-between items-center'>
+                <p>
+                    <span className='font-bold'>{index}: </span>
+                    <span>{question.title.value}</span>
+                </p>
 
-            <p className='ms-12 text-sm'>
-                <span className='font-bold'>Clarification: </span> 
-                <span>{question.clarification?.value}</span>
-            </p>
-
-
-            <div className={`ms-4 mt-2 ${questionType === QuestionTypeLabel["yes-no"] && "flex"}`}>
-                <p>Answers: </p>
-
-                <div className='mt-1 ps-5'>
-                    {
-                        (questionType === QuestionTypeLabel["yes-no"] || questionType === QuestionTypeLabel["multi-choice"])
-                    &&
-                        <AnswersElement answer={answer as (YES_NO | MULTI_CHOICE)}/>
-                    }
-                </div>
+                <Button 
+                    className="px-3 text-lg rounded-lg bg-red-500"
+                    text={"Remove"}
+                    isDisabled={false}
+                    onClick={deleteQuestion}
+                />
             </div>
+           
+
+            {
+                question.clarification?.value 
+            &&
+                <p className='ms-12 text-sm'>
+                    <span className='font-bold'>Clarification: </span> 
+                    <span>{question.clarification?.value}</span>
+                </p>
+            }
+            
+
+
+            {
+                questionType !== QuestionTypeLabel["open-ended"]
+            &&
+                <div className={`ms-4 mt-2 ${questionType === QuestionTypeLabel["yes-no"] && "flex items-center"}`}>
+                    <p>Answers: </p>
+
+                    <div className='mt-1 ps-5'>
+                        {
+                            (questionType === QuestionTypeLabel["yes-no"] || questionType === QuestionTypeLabel["multi-choice"])
+                        &&
+                            <AnswersElement answer={answer as (YES_NO | MULTI_CHOICE)}/>
+                        }
+                    </div>
+                </div>
+            }
+            
         </div>
     )
 }
 
-const Questions = (props: Props) => 
+ const Questions = (props: Props) => 
 {
-    const { questions } = props
-
+    const { questions, deleteQuestion } = props
+    
     return (
         <div className='flex flex-col gap-3 ms-10'>
             {questions.map((question, index) => 
@@ -81,7 +104,9 @@ const Questions = (props: Props) =>
                 <QuestionElement 
                     key={question.title.value} 
                     index={index + 1} 
-                    question={question} 
+                    question={question}
+                    
+                    deleteQuestion={() => deleteQuestion(index)}
                 />
             ))}
         </div>
