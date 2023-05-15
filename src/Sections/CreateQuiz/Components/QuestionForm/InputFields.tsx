@@ -30,7 +30,7 @@ const InputFields = (props:
             style={{
                 container: "w-full",
                 label: "font-bold",
-                input: "border-black border px-2",
+                input: " px-2",
                 underline: "h-[2px] mt-1"
             }}
         
@@ -41,7 +41,7 @@ const InputFields = (props:
             style={{
                 container: "w-full",
                 label: "font-bold",
-                input: "border-black border px-2",
+                input: " px-2",
                 underline: "h-[2px] mt-1"
             }}
         
@@ -52,7 +52,7 @@ const InputFields = (props:
             style={{
                 container: "w-full mb-5",
                 label: "font-bold",
-                input: "border-black border px-3",
+                input: " px-3",
             }}
         
             label='Question Type'

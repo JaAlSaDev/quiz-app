@@ -46,14 +46,22 @@ const NumberInputField = (props: Props) =>
 
                 <div className='h-full flex ms-2 gap-1 text-sm'>
                     <Button 
-                        className="px-2 rounded-lg flex justify-center"
+                        style={{
+                            neutral: "px-2 rounded-lg flex justify-center",
+                            active: "bg-purple-500 text-white",
+                            disabled: ""
+                        }}
                         text={"+"}
                         isDisabled={value === max}
                         onClick={() => changeValue(1)}
                     />
 
                     <Button 
-                        className="px-2 rounded-lg flex justify-center"
+                        style={{
+                            neutral: "px-2 rounded-lg flex justify-center",
+                            active: "bg-purple-500 text-white",
+                            disabled: ""
+                        }}
                         text={"-"}
                         isDisabled={value === min}
                         onClick={() => changeValue(-1)}

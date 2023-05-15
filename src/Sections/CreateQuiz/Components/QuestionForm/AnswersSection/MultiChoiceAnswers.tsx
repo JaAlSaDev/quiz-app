@@ -67,7 +67,10 @@ const Header = (props:
                     answer.label === QuestionTypeLabel.multi_choice
                 &&
                     <Button 
-                        className="w-fit px-3 py-1 text-lg rounded-lg"
+                        style={{
+                            neutral:"w-fit px-3 py-1 text-lg rounded-lg",
+                            active: "bg-purple-500 text-white"
+                        }}
                         text={"+"}
                         isDisabled={!canAddNewOption}
                         onClick={addAnswer}
