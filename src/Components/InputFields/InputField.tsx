@@ -51,13 +51,13 @@ const InputField = (props: Props) =>
                 {props?.label && <label className={style?.label}>{props.label}</label>}
 
                 <input 
-                    className={`w-full outline-0 bg-transparent ${style?.input}`}
+                    className={`w-full outline-0 bg-gray-200 border-transparent ${style?.input}`}
                     type='text'
                     value={value}
                     placeholder={isFocused? "Start typing...": ""}
                     
                     onChange={e => changeValue(e.target.value)}
-                    onFocus={() =>  setFocused(true)}
+                    onFocus={() => setFocused(true)}
                     onBlur={() =>  setFocused(false)}
                 />
 

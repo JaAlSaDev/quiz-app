@@ -21,14 +21,22 @@ const AlertBox = (props: Props) =>
 
                 <div className="flex justify-center gap-2">
                     <Button 
-                        className="px-5 py-1 rounded-sm bg-red-500 text-md font-bold text-white"
+                        style={{
+                            neutral: "px-5 py-1 rounded-sm bg-red-500 text-md font-bold text-white",
+                            disabled: "",
+                            active: ""
+                        }}
                         text={"Cancel"}
                         isDisabled={false}
                         onClick={cancel}
                     />
 
                     <Button 
-                        className="px-5 py-1 rounded-sm bg-green-500 text-md font-bold text-white"
+                        style={{
+                            neutral: "px-5 py-1 rounded-sm bg-green-500 text-md font-bold text-white",
+                            disabled: "",
+                            active: ""
+                        }}
                         text={"Confirm"}
                         isDisabled={false}
                         onClick={confirm}

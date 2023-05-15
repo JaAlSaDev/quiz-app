@@ -19,10 +19,13 @@ const Header = (props: { isAddButtonEnabled: boolean, openQuestionForm: () => vo
 
     return (
         <div className='w-full flex justify-between items-center mb-3'>
-            <p className='text-xl font-bold'>Questions:</p>
+            <p className='text-xl font-bold'>Questions</p>
 
             <Button 
-                className="px-3 text-2xl rounded-lg"
+                style={{
+                    neutral: "px-3 text-2xl rounded-lg",
+                    active: "bg-purple-500 text-white"
+                }}
                 text={"+"}
                 isDisabled={isAddButtonEnabled}
                 onClick={openQuestionForm}
@@ -50,18 +53,15 @@ const QuestionsSection = (props: Props) =>
     
     return (
         <div className='w-full'>
-            <Header
-                isAddButtonEnabled={isAddButtonEnabled} 
-                openQuestionForm={openQuestionForm}
-            />
+            <Header isAddButtonEnabled={isAddButtonEnabled} openQuestionForm={openQuestionForm}/>
 
-            <div className='ms-5'>
+            <div className='opacity-[60%]'>
                 {questions.length < 3 && <p>Please add at least 3 questions...</p>}
             </div>
 
             <Questions questions={questions} deleteQuestion={deleteQuestion} />
 
-           {isFormOn && <QuestionForm addQuestion={addQuestion}/>}
+           {isFormOn && <QuestionForm addQuestion={addQuestion} cancel={() => setIsFormOn(false)}/>}
         </div>
     )
 }

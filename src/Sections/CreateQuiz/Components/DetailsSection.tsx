@@ -16,15 +16,15 @@ const DetailsSection = (props: Props) =>
   return (
     <div className=''>
         <p className='text-xl font-bold mb-3'>
-            General Quiz Details:
+            General Quiz Details
         </p>
 
-        <div className='ms-10'>
+        <div className='grid gap-3'>
             <QuizTitleInput 
                 style={{
                     container: "w-full",
                     label: "font-bold",
-                    input: "border-black border px-2",
+                    input: "px-2",
                     underline: "h-[2px] mt-1"
                 }}
                 
@@ -33,9 +33,9 @@ const DetailsSection = (props: Props) =>
 
             <NumberInputField 
                 style={{
-                    container: "w-full mb-4",
+                    container: "w-1/2 mb-5",
                     label: "font-bold",
-                    input: "border-black border px-2 h-fit w-1/2 outline-0 bg-transparent",
+                    input: "px-2 h-fit w-1/2 bg-gray-200",
                 }}
                 label='Number of Chances '
                 defaultValue={5} min={1} max={5} step={1}
@@ -45,9 +45,9 @@ const DetailsSection = (props: Props) =>
 
             <NumberInputField 
                 style={{
-                    container: "w-full mb-4",
+                    container: "w-1/2",
                     label: "font-bold",
-                    input: "border-black border px-2 h-fit w-1/2 outline-0 bg-transparent",
+                    input: " px-2 h-fit w-1/2 bg-gray-200",
                 }}
                 label='Percentage to Pass '
                 defaultValue={100} min={0} max={100} step={5}

@@ -2,7 +2,12 @@ import React from 'react'
 
 type Props = 
 {
-    className: string,
+    style:
+    {
+        neutral: string,
+        active?: string,
+        disabled?: string
+    }
     text: string,
     isDisabled?: boolean,
     onClick: Function
@@ -10,20 +15,22 @@ type Props =
 
 const Button = (props: Props) => 
 {
-    const { className, text, isDisabled,  onClick } = props;
+    const { style, text, isDisabled } = props;
+
+    const onClick = () =>
+    {
+        if (!isDisabled) 
+        {
+            props.onClick()
+        }
+    }
 
     return (
         <div 
-            className={`h-fit w-fit ${isDisabled? "bg-gray-300 cursor-not-allowed": `bg-[#ee9a00] cursor-pointer`} ${className}`} 
-            onClick={() => 
-                {
-                    if (!isDisabled) 
-                    {
-                        onClick()
-                    }
-                }}
+            className={`h-fit w-fit m-0 flex justify-center items-center ${style.neutral} ${isDisabled? `bg-gray-200 ${style.disabled} cursor-not-allowed`: `${style.active} cursor-pointer`}`} 
+            onClick={onClick}
         >
-            {text}
+            <p>{text}</p>
         </div>)
 }
 

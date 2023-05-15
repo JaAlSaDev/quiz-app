@@ -22,10 +22,7 @@ const AnswersElement = (props: { answer: GenericAnswer }) =>
             {( typeof correctAnswerID === "number" ) && 
             
                 <RadioInputs 
-                    style={{
-                        container: "flex w-fit gap-3",
-                        radio: { container: "gap-3" }
-                    }}
+                    style={{ container: "flex w-fit gap-3", radio: { container: "gap-3" }}}
                     
                     answer={props.answer}
                     isDisabled={true}
@@ -56,8 +53,8 @@ const QuestionElement = (props: { isView: boolean, index: number, question: Ques
         <>
             <div className=''>
                 <div className='w-full flex justify-between items-center'>
-                    <p>
-                        <span className='font-bold'>{index}: </span>
+                    <p className='font-bold'>
+                        <span >{index}: </span>
                         <span>{question.title.value}</span>
                     </p>
 
@@ -65,7 +62,9 @@ const QuestionElement = (props: { isView: boolean, index: number, question: Ques
                         !isView
                     && 
                         <Button 
-                            className="px-2 rounded-sm bg-red-500 text-md font-bold text-white"
+                            style={{
+                                neutral:"px-2 rounded-sm bg-transparent text-md font-bold text-red-500"
+                            }}
                             text={"X"}
                             isDisabled={false}
                             onClick={openDeleteDialog}
@@ -77,8 +76,8 @@ const QuestionElement = (props: { isView: boolean, index: number, question: Ques
                 {
                     question.clarification?.value 
                 &&
-                    <p className='ms-12 text-sm'>
-                        <span className='font-bold'>Clarification: </span> 
+                    <p className='ms-4 text-sm'>
+                        <span className=''>Clarification: </span> 
                         <span>{question.clarification?.value}</span>
                     </p>
                 }
@@ -87,7 +86,7 @@ const QuestionElement = (props: { isView: boolean, index: number, question: Ques
                     question.answer?.label !== QuestionTypeLabel.open_ended
                 &&
                     <div className={`ms-4 mt-2 ${answer?.label === QuestionTypeLabel.yes_no && "flex items-center"}`}>
-                        <p>Answers: </p>
+                        <p className=''>Answers: </p>
 
                         <div className='mt-1 ps-5'>
                             {
@@ -120,8 +119,15 @@ const QuestionElement = (props: { isView: boolean, index: number, question: Ques
 
     const isView = !props?.deleteQuestion;
     
+    const deleteQuestion = (index: number) =>
+    {
+        if (props?.deleteQuestion) 
+        {
+            props.deleteQuestion(index)  
+        }
+    }
     return (
-        <div className='flex flex-col gap-3 ms-10'>
+        <div className='flex flex-col gap-8'>
             {questions.map((question, index) => 
             (
                 <QuestionElement 
@@ -130,12 +136,7 @@ const QuestionElement = (props: { isView: boolean, index: number, question: Ques
                     index={index + 1} 
                     question={question}
                     
-                    deleteQuestion={() => {
-                        if (props?.deleteQuestion) 
-                        {
-                            props.deleteQuestion(index)  
-                        }
-                    }}
+                    deleteQuestion={() => deleteQuestion(index)}
                 />
             ))}
         </div>

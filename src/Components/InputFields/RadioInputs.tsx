@@ -53,10 +53,10 @@ const RadioInput = (props: RadioProps) =>
     return (
         <div className={`flex bg-blue items-center select-none ${style?.container}`}>
             <div 
-                className={`h-3 flex items-center justify-center cursor-pointer rounded-full aspect-square border ${props?.isDisabled? "border-gray-900": "border-black"}  overflow-hidden`}
+                className={`aspect-square p-[0.25rem]  rounded-full  flex items-center justify-center cursor-pointer border ${props?.isDisabled? "border-gray-900": "border-black"}  overflow-hidden`}
                 onClick={() => changeValue(possibleAnswer.id)} 
             >
-                <div className={`h-[70%] rounded-full aspect-square ${isChosen? props?.isDisabled? "bg-gray-900": "bg-black": ""}`}/>
+                <div className={`p-[0.2rem] aspect-square rounded-full ${isChosen? props?.isDisabled? "bg-gray-900": "bg-black": ""}`}/>
             </div>
 
             {
@@ -77,7 +77,9 @@ const RadioInput = (props: RadioProps) =>
                     />
 
                     <Button 
-                        className="px-2 rounded-sm bg-red-500 text-md font-bold text-white"
+                        style={{
+                            neutral: "px-[0.35rem] rounded-full bg-red-500 text-sm font-bold text-white"
+                        }}
                         text={"X"}
                         isDisabled={false}
                         onClick={props.deleteAnswer}
@@ -141,32 +143,33 @@ const RadioInputs = (props: RadioInputsProps) =>
     }
     
     const isMultiChoice = answer.label === QuestionTypeLabel.multi_choice
-  return (
-    <div className={`${style?.container} ${isMultiChoice && "flex flex-col"}`}>
-        {
-            answer?.answers?.map((possibleAnswer, index) =>
+
+    return (
+        <div className={`${style?.container} ${isMultiChoice && "flex flex-col"}`}>
             {
-                return (
-                    <RadioInput 
-                        key={possibleAnswer?.id} 
-                        style={style?.radio}
+                answer?.answers?.map((possibleAnswer, index) =>
+                {
+                    return (
+                        <RadioInput 
+                            key={possibleAnswer?.id} 
+                            style={style?.radio}
 
-                        isMultiChoice={isMultiChoice}
-                        questionType={answer.label}
-                        isDisabled={props?.isDisabled}
+                            isMultiChoice={isMultiChoice}
+                            questionType={answer.label}
+                            isDisabled={props?.isDisabled}
 
-                        correctAnswerID={answer?.correctAnswerID as number}
-                        possibleAnswer={possibleAnswer}
+                            correctAnswerID={answer?.correctAnswerID as number}
+                            possibleAnswer={possibleAnswer}
 
-                        changeValue={changeValue}
-                        editAnswer={(editedAnswer: Answer) =>  editAnswer(index, editedAnswer)}
-                        deleteAnswer={() => deleteAnswer(index)}
-                    />
-                )
-            }
-        )}
-    </div>
-  )
+                            changeValue={changeValue}
+                            editAnswer={(editedAnswer: Answer) =>  editAnswer(index, editedAnswer)}
+                            deleteAnswer={() => deleteAnswer(index)}
+                        />
+                    )
+                }
+            )}
+        </div>
+    )
 }
 
 export default RadioInputs

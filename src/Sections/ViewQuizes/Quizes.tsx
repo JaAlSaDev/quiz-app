@@ -36,17 +36,15 @@ const Quizes = (props: Props) =>
       
       return index
     }
-  return (
-    <div className='w-[80%] flex flex-col overflow-y-scroll gap-4 mt-4'>      
-      {
-        quizes?.length > 0 
-      &&
-        <>
-          {quizes.map((quiz, index) => <QuizCard key={getKey(quiz, index)} quiz={quiz} />)}
-        </>
-      }
-    </div>
-  )
+
+    return (
+      <div className='w-[80%] flex justify-center  overflow-y-scroll just mt-10'> 
+           {/* grid grid-cols-1 sm:grid-cols-3 gap-1  */}
+        <div className='flex flex-wrap w-fit'>
+          {quizes?.map((quiz, index) => <QuizCard key={getKey(quiz, index)} quiz={quiz} />)}
+        </div>
+      </div>
+    )
 }
 
 export default Quizes
