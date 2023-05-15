@@ -8,23 +8,25 @@ type Props =
     quiz: any
 }
 
+const backgroundColor: { [index: number]: string} =
+    {
+        0: "bg-[#cb9bfb]",
+        1: "bg-[#7da6f6]",
+        2: "bg-[#f9fd91]",
+        3: "bg-[#5fcca0]"
+    }
+
 const QuizDetails = (props: { details: any, turnOnQuestions: () => void }) =>
 {
     const { details, turnOnQuestions } = props;
 
     const randomNum = Math.floor(Math.random() * 4);
 
-    const backgroundColor: { [index: number]: string} =
-    {
-        0: "bg-[#cb9vfb]",
-        1: "bg-[#7da6f6]",
-        2: "bg-[#f9fd91]",
-        3: "bg-[#5fcca0]"
-    }
-
+    const bg = backgroundColor[randomNum] || "bg-gray-300"
+    
     return (
     <div 
-        className={`w-full h-full grid grid-cols-1 gap-4 p-5 rounded-xl bg-gray-300 overflow-hidden cursor-pointer ${backgroundColor[randomNum]}`}
+        className={`w-full h-full grid grid-cols-1 gap-4 p-5 rounded-xl overflow-hidden cursor-pointer ${bg}`}
         onClick={turnOnQuestions}
     >
         <p className='text-3xl font-bold font-sans mb-10 line-clamp-2'>{details?.title?.value}</p>
